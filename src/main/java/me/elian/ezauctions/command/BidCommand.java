@@ -27,7 +27,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.concurrent.ExecutionException;
 
 @Singleton
-@CommandAlias("bid|b")
+@CommandAlias("bid")
 @CommandPermission("ezauctions.bid")
 @Description("Bid on an auction")
 public class BidCommand extends BaseCommand {
