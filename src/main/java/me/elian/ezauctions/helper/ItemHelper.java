@@ -1,6 +1,7 @@
 package me.elian.ezauctions.helper;
 
 import com.destroystokyo.paper.MaterialTags;
+import com.google.gson.JsonParser;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.JukeboxPlayable;
 import net.kyori.adventure.key.Key;
@@ -14,6 +15,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.NotNull;
@@ -244,6 +246,12 @@ public class ItemHelper {
 		return tag.toString();
 	}
 
+	private static NamespacedKey CANVAS_ID_KEY = NamespacedKey.fromString("xercapaint:canvas_id");
+	private static NamespacedKey CANVAS_TITLE_KEY = NamespacedKey.fromString("xercapaint:canvas_title");
+	private static NamespacedKey CANVAS_AUTHOR_KEY = NamespacedKey.fromString("xercapaint:canvas_author");
+
+	private static NamespacedKey PICTURE_DATA_KEY = NamespacedKey.fromString("camerapture:picture_data");
+
 	public static @NotNull String getMinecraftName(ItemStack is) {
 		Material material = is.getType();
 		if(MaterialTags.MUSIC_DISCS.isTagged(material)){
@@ -251,6 +259,22 @@ public class ItemHelper {
 			if(playable != null){
 				JukeboxSong song = playable.jukeboxSong();
 				return PlainTextComponentSerializer.plainText().serialize(song.getDescription());
+			}
+		}
+
+		if(is.getPersistentDataContainer().has(CANVAS_TITLE_KEY)){
+			String title = is.getPersistentDataContainer().get(CANVAS_TITLE_KEY, PersistentDataType.STRING);
+			String author = is.getPersistentDataContainer().getOrDefault(CANVAS_AUTHOR_KEY, PersistentDataType.STRING, "Unknown Artist");
+			return "\"\"" + title + "\" by " + author;
+		}else if(is.getPersistentDataContainer().has(CANVAS_ID_KEY)){
+			return "Unfinished Painting";
+		}else if(is.getPersistentDataContainer().has(PICTURE_DATA_KEY)){
+			try {
+				return "Picture taken by " +
+						JsonParser.parseString(is.getPersistentDataContainer().getOrDefault(PICTURE_DATA_KEY, PersistentDataType.STRING,"{\"creator\":\"UNKNOWN?\"}"))
+								.getAsJsonObject().get("creator").getAsString();
+			}catch (Exception e){
+				return "Picture (? Error)";
 			}
 		}
 
