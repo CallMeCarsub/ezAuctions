@@ -148,10 +148,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.seeseemelk</groupId>
-            <artifactId>MockBukkit-v1.20</artifactId>
-            <version>3.31.0</version>
-            <scope>test</scope>
+            <groupId>org.mockbukkit.mockbukkit</groupId>
+            <artifactId>mockbukkit-v1.21</artifactId>
+            <version>4.108.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.MilkBowl</groupId>

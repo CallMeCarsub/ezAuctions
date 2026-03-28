@@ -2,6 +2,7 @@ package me.elian.ezauctions.controller;
 
 import co.aikar.commands.PaperCommandManager;
 import co.aikar.locales.MessageKey;
+import com.google.common.collect.ObjectArrays;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import me.elian.ezauctions.Logger;
@@ -16,7 +17,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.milkbowl.vault.economy.Economy;
-import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -159,7 +159,7 @@ public class MessageController extends FileHandler {
 		String booleansReplaced = replaceAuctionPatterns(raw, auction.getAuctionData());
 		TagResolver[] tagResolvers = getAuctionTagResolvers(auction.getAuctionData(), auction.getBidList(),
 				auction.getRemainingSeconds());
-		TagResolver[] mergedResolvers = ArrayUtils.addAll(tagResolvers, extraResolvers);
+		TagResolver[] mergedResolvers = ObjectArrays.concat(tagResolvers, extraResolvers, TagResolver.class);
 
 		return Arrays.stream(booleansReplaced.split("\n"))
 				.map(s -> {
@@ -180,7 +180,7 @@ public class MessageController extends FileHandler {
 
 		String message = replaceAuctionPatterns(rawMessage, data);
 		TagResolver[] tagResolvers = getAuctionTagResolvers(data, bidList, remainingSeconds);
-		TagResolver[] mergedResolvers = ArrayUtils.addAll(tagResolvers, extraResolvers);
+		TagResolver[] mergedResolvers = ObjectArrays.concat(tagResolvers, extraResolvers, TagResolver.class);
 
 		Component parsed;
 		try {
