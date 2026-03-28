@@ -5,6 +5,7 @@ import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.JukeboxPlayable;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
+import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.*;
@@ -252,7 +253,8 @@ public class ItemHelper {
 				return PlainTextComponentSerializer.plainText().serialize(song.getDescription());
 			}
 		}
-		return (material.isBlock() ? "block" : "item") + ".minecraft." + material.toString().toLowerCase();
+
+		return PlainTextComponentSerializer.plainText().serialize(is.effectiveName());
 	}
 
 	/**
