@@ -1,12 +1,13 @@
 package me.elian.ezauctions.helper;
 
+import com.destroystokyo.paper.MaterialTags;
+import io.papermc.paper.datacomponent.DataComponentTypes;
+import io.papermc.paper.datacomponent.item.JukeboxPlayable;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.event.HoverEvent;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.World;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -244,6 +245,13 @@ public class ItemHelper {
 
 	public static @NotNull String getMinecraftName(ItemStack is) {
 		Material material = is.getType();
+		if(MaterialTags.MUSIC_DISCS.isTagged(material)){
+			JukeboxPlayable playable = is.getData(DataComponentTypes.JUKEBOX_PLAYABLE);
+			if(playable != null){
+				JukeboxSong song = playable.jukeboxSong();
+				return PlainTextComponentSerializer.plainText().serialize(song.getDescription());
+			}
+		}
 		return (material.isBlock() ? "block" : "item") + ".minecraft." + material.toString().toLowerCase();
 	}
 
