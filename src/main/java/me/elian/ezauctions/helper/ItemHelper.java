@@ -8,6 +8,7 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -252,20 +253,23 @@ public class ItemHelper {
 
 	private static NamespacedKey PICTURE_DATA_KEY = NamespacedKey.fromString("camerapture:picture_data");
 
+	private static String escapeMiniMessage(String input){
+		return MiniMessage.miniMessage().escapeTags(input);
+	}
 	public static @NotNull String getMinecraftName(ItemStack is) {
 		Material material = is.getType();
 		if(MaterialTags.MUSIC_DISCS.isTagged(material)){
 			JukeboxPlayable playable = is.getData(DataComponentTypes.JUKEBOX_PLAYABLE);
 			if(playable != null){
 				JukeboxSong song = playable.jukeboxSong();
-				return PlainTextComponentSerializer.plainText().serialize(song.getDescription());
+				return MiniMessage.miniMessage().serialize(song.getDescription());
 			}
 		}
 
 		if(is.getPersistentDataContainer().has(CANVAS_TITLE_KEY)){
-			String title = is.getPersistentDataContainer().get(CANVAS_TITLE_KEY, PersistentDataType.STRING);
+			String title = is.getPersistentDataContainer().getOrDefault(CANVAS_TITLE_KEY, PersistentDataType.STRING, "Unnamed Painting");
 			String author = is.getPersistentDataContainer().getOrDefault(CANVAS_AUTHOR_KEY, PersistentDataType.STRING, "Unknown Artist");
-			return "\"\"" + title + "\" by " + author;
+			return "\"" + escapeMiniMessage(title) + "\" by " + author;
 		}else if(is.getPersistentDataContainer().has(CANVAS_ID_KEY)){
 			return "Unfinished Painting";
 		}else if(is.getPersistentDataContainer().has(PICTURE_DATA_KEY)){
@@ -278,7 +282,26 @@ public class ItemHelper {
 			}
 		}
 
-		return PlainTextComponentSerializer.plainText().serialize(is.effectiveName());
+		if(is.hasData(DataComponentTypes.ITEM_NAME)){
+			return MiniMessage.miniMessage().serialize(is.getData(DataComponentTypes.ITEM_NAME));
+		}
+		return "<lang:" + is.translationKey() + ">";
+	}
+
+	public static String getSprite(ItemStack stack){
+		String spritePiece;
+		if(stack.hasData(DataComponentTypes.CUSTOM_MODEL_DATA)) {
+			spritePiece = "<sprite:gui:icon/chat_modified>";
+		}else if(stack.getType().isBlock()){
+			spritePiece = "<sprite:blocks:block/" + stack.getType().getKey().value() + ">";
+		}else{
+			if(stack.getType() == Material.DEBUG_STICK){
+				spritePiece = "<sprite:items:\"smponline:item/debug_stick\">";
+			}else {
+				spritePiece = "<sprite:items:item/" + stack.getType().getKey().value() + ">";
+			}
+		}
+		return "<white>" + spritePiece + "</white> ";
 	}
 
 	/**

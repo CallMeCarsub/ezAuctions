@@ -96,6 +96,7 @@ public class EzAuctionsPlaceholderExpansion extends PlaceholderExpansion {
 			case "auctioneeruuid" -> data.getAuctioneer().getUniqueId().toString();
 			case "itemamount" -> Integer.toString(data.getAmount());
 			case "minecraftname" -> data.getMinecraftName();
+			case "sprite" -> data.getSprite();
 			case "customname" -> data.getCustomName();
 			case "materialtype" -> item.getType().toString().toLowerCase();
 			case "startingprice" -> Double.toString(data.getStartingPrice());

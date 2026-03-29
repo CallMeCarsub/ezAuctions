@@ -182,6 +182,8 @@ public class MessageController extends FileHandler {
 		TagResolver[] tagResolvers = getAuctionTagResolvers(data, bidList, remainingSeconds);
 		TagResolver[] mergedResolvers = ObjectArrays.concat(tagResolvers, extraResolvers, TagResolver.class);
 
+		logger.info("getAuctionComponent returns \n    > " +  message + " < ");
+
 		Component parsed;
 		try {
 			parsed = MiniMessage.miniMessage().deserialize(message, mergedResolvers);
@@ -342,6 +344,7 @@ public class MessageController extends FileHandler {
 		replaced = replaced.replace("<materialtype>", data.getItem().getType().toString().toLowerCase());
 		replaced = replaced.replace("<itemamount>", Integer.toString(data.getAmount()));
 		replaced = replaced.replace("<minecraftname>", data.getMinecraftName());
+		replaced = replaced.replace("<itemsprite>", data.getSprite());
 		replaced = replaced.replace("<customname>", data.getCustomName());
 		replaced = replaced.replace("<itemnbt>", "");
 		return replaced;

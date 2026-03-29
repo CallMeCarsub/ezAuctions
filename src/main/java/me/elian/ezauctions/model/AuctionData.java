@@ -37,6 +37,7 @@ public final class AuctionData {
 	private String skullOwner;
 	private int repairPrice;
 	private String minecraftName;
+	private String sprite;
 	private String customName;
 	private Key itemKey;
 
@@ -102,6 +103,10 @@ public final class AuctionData {
 		return minecraftName;
 	}
 
+	public String getSprite() {
+		return sprite;
+	}
+
 	public String getCustomName() {
 		return customName;
 	}
@@ -129,6 +134,7 @@ public final class AuctionData {
 		itemKey = Key.key(typeKey.getNamespace(), typeKey.getKey());
 
 		minecraftName = ItemHelper.getMinecraftName(item);
+		sprite = ItemHelper.getSprite(item);
 		customName = minecraftName;
 		if (meta != null && !meta.getDisplayName().isBlank()) {
 			Component legacySection = LegacyComponentSerializer.legacySection().deserialize(meta.getDisplayName());
