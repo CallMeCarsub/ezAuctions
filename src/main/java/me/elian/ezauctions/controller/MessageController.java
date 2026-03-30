@@ -120,18 +120,23 @@ public class MessageController extends FileHandler {
 		Component message = getAuctionComponent(getRawMessage(key), auction.getAuctionData(), auction.getBidList(),
 				auction.getRemainingSeconds(), resolvers);
 		for (AuctionPlayer ap : onlinePlayers) {
-			// ensure player isn't ignoring all messages
-			if (ap.isIgnoringAll())
-				continue;
+			// skip ignore/spam system if player is auctioneer or in the auction
+			if(!auctioneerId.equals(ap.getUniqueId()) && !auction.getBidList().playerHasAnyBids(ap.getUniqueId())) {
 
-			// ensure player isn't ignoring spammy messages
-			if (spammy && ap.isIgnoringSpammy())
-				continue;
+				// ensure player isn't ignoring all messages
+				if (ap.isIgnoringAll())
+					continue;
 
-			// ensure player isn't ignoring auctioneer
-			if (ap.getIgnoredPlayers() != null
-					&& ap.getIgnoredPlayers().stream().anyMatch(ip -> ip.getIgnored().equals(auctioneerId)))
-				continue;
+				// ensure player isn't ignoring spammy messages
+				if (spammy && ap.isIgnoringSpammy())
+					continue;
+
+				// ensure player isn't ignoring auctioneer
+				if (ap.getIgnoredPlayers() != null
+						&& ap.getIgnoredPlayers().stream().anyMatch(ip -> ip.getIgnored().equals(auctioneerId)))
+					continue;
+
+			}
 
 			Player target = ap.getOnlinePlayer();
 
@@ -182,7 +187,7 @@ public class MessageController extends FileHandler {
 		TagResolver[] tagResolvers = getAuctionTagResolvers(data, bidList, remainingSeconds);
 		TagResolver[] mergedResolvers = ObjectArrays.concat(tagResolvers, extraResolvers, TagResolver.class);
 
-		logger.info("getAuctionComponent returns \n    > " +  message + " < ");
+		//logger.info("getAuctionComponent returns \n    > " +  message + " < ");
 
 		Component parsed;
 		try {

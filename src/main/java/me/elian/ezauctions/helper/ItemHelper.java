@@ -292,8 +292,6 @@ public class ItemHelper {
 		String spritePiece;
 		if(stack.hasData(DataComponentTypes.CUSTOM_MODEL_DATA)) {
 			spritePiece = "<sprite:gui:icon/chat_modified>";
-		}else if(stack.getType().isBlock()){
-			spritePiece = "<sprite:blocks:block/" + stack.getType().getKey().value() + ">";
 		}else{
 			if(stack.getType() == Material.DEBUG_STICK){
 				spritePiece = "<sprite:items:\"smponline:item/debug_stick\">";
